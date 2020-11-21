@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 bufferSize = 2
 
 #----Werkstueck--------
-blockLength = int(input("Werkstueck Laenge: "))
-blockWidth = int(input("Werkstueck Breite: "))
-blockHeight = int(input("Werkstueck Hoehe: "))
+blockLength = int(input("Werkstueck Laenge [in cm] : "))
+blockWidth = int(input("Werkstueck Breite [in cm] :  "))
+blockHeight = int(input("Werkstueck Hoehe [in cm] :  "))
 
 if(blockLength < 0 or blockWidth < 0 or blockHeight<0):
     print("eingaben duerfen nicht negativ sein")
@@ -20,8 +20,8 @@ block = [blockLength,blockWidth,blockHeight]
 #-----block fertig-----
 
 #----Werkzeug-------
-drillHeight = float(input("Werkzeug Hoehe: "))
-drillRad = float(input("Werkzeug Radius: "))
+drillHeight = float(input("Werkzeug Hoehe [in cm] :  "))
+drillRad = float(input("Werkzeug Radius [in cm] :  "))
 
 if(drillHeight<=0 or drillRad<=0):
     print("Werkzeug Mase duerfen nicht kleiner oder gleich null sein")
