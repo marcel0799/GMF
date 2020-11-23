@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 #--------globaleVariableneinlesen--------
 bufferSize = 2
 
@@ -29,7 +30,7 @@ if(drillHeight<=0 or drillRad<=0):
 if(drillHeight > blockHeight):
     print("Werkzeug ist zu gros, es wuerde durch die Grundplatte schneiden")
     exit(0)
-    
+
 drill = [drillHeight,drillRad]
 #----Werkzeug fertig----
 
@@ -47,18 +48,18 @@ def distanc(x,y):
 def createBlock():
     #Hoehenfeldkreieren
     hFeld = np.zeros([block[0]+bufferSize*2,block[1]+bufferSize*2])
-    
+
 
     #Hoehenfeldfuellen
     for x in range(block[0]):
         for y in range(block[1]):
             hFeld[x+bufferSize][y+bufferSize]=block[2]
-            
+
     return hFeld
-    
+
 def mill(hFeld):
     #der fraesprozess an sich
-    
+
     for x in range(block[0]):
         for y in range(block[1]):
             #korriegierte x und y werte
@@ -73,25 +74,42 @@ def mill(hFeld):
             if(d < drill[1] and d > (-drill[1]) ):
                 #die neue hoehe ist die alte hoehe minus die groese des Werkzeugs
                 hFeld[xTemp][yTemp] = float(block[2]) - drill[0]
-    
+
+def f(x,y, feld):
+    return feld[x,y]
 
 def main():
     #Werkstueck erstellen
     feld = createBlock()
-    
+
+
+    X = np.arange(0,block[0],1)
+    Y = np.arange(0,block[1],1)
+    X,Y = np.meshgrid(X,Y)
+    Z = f(X,Y, feld)
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    surf = ax.plot_surface(X=X,Y=Y,Z=Z, cmap=cm.Greens)
+
     #darstellen des unbehandelten Werkstuecks
-    rotated = np.rot90(feld, 1)
-    plt.imshow(rotated)
-    plt.show()
-    
+
+
     # der Fraesen an sich
     mill(feld)
-    
-    #darstellen das fertigen Werstuecks
-    rotated = np.rot90(feld, 1)
-    plt.imshow(rotated)
+
+    X = np.arange(0,block[0],1)
+    Y = np.arange(0,block[1],1)
+    X,Y = np.meshgrid(X,Y)
+    Z = f(X,Y, feld)
+
+
+    fig = plt.figure()
+    ay = fig.add_subplot(111, projection='3d')
+    surf = ay.plot_surface(X=X,Y=Y,Z=Z, cmap=cm.Greens)
+
     plt.show()
-    
+
 
 if __name__ == "__main__":
     main()
