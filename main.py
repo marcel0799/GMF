@@ -64,6 +64,9 @@ def mill(hFeld):
             #korriegierte x und y werte
             xTemp = x + bufferSize
             yTemp = y + bufferSize
+            ##der Fraesprozess soll bei (120,10,110) aufhoeren
+            #if(xTemp > 120 or yTemp > 10):
+            #    continue
             #abstand des aktuellen punktes zur gefraesten gerade
             d = distanc(xTemp,yTemp)
             #ist der punkt so nah an der gerade das er im radius des werkzeugsliegt, wird di hoehe verringert
