@@ -34,13 +34,15 @@ if(drillHeight > blockHeight):
 drill = [drillHeight,drillRad]
 #----Werkzeug fertig----
 
-p1 = [0,-6]
-p2 = [120,10]
+
+points = np.array([[20,20, 90],[80,20,90]])
+
+
 
 def distanc(x,y,x1,y1,x2,y2):
 
     m = (y2-y1)/(x2-x1)
-    d = m*x + (y1-m*x)-y
+    d = m*x + (y1-m*x1)-y
     return d
 
 def createBlock():
@@ -63,15 +65,45 @@ def mill(hFeld):
             #korriegierte x und y werte
             xTemp = x + bufferSize
             yTemp = y + bufferSize
-            ##der Fraesprozess soll bei (120,10,110) aufhoeren
-            #if(xTemp > 120 or yTemp > 10):
-            #    continue
-            #abstand des aktuellen punktes zur gefraesten gerade
-            d = distanc(xTemp,yTemp,p1[0],p1[1],p2[0],p2[1])
-            #ist der punkt so nah an der gerade das er im radius des werkzeugsliegt, wird di hoehe verringert
-            if(d < drill[1] and d > (-drill[1]) ):
-                #die neue hoehe ist die alte hoehe minus die groese des Werkzeugs
-                hFeld[xTemp][yTemp] = float(block[2]) - drill[0]
+            
+            a = np.array([xTemp,yTemp,block[2]])
+            
+            
+            #Fuer alle aus den Punkten enstehenden Geraden wird gefrast
+            for i in range(len(points)) : 
+                if(i != 0):
+                
+                    n = points[i]-points[i-1]
+                    #for i in range(len(n)):
+                    #    n[i] *= 1/(np.linalg.norm(n))
+                        
+                        
+                    ##Nachster Punkt auf Gerade von beliebigem Punkt a durch Schnittpunkt mit Ebene
+                    #Ebene durch a mit normalen n ist :
+                    # n[0]*x + n[1]*x2 + n[2]*x3 = d
+                    #gerade = n * t + points[i-1]
+                    
+                    #n[0]*(n[0] * t + points[i-1][0]) +
+                    #n[1]*(n[1] * t + points[i-1][1]) + 
+                    #n[2]*(n[2] * t + points[i-1][2]) = d
+                    #(n dot n)  * t + n dot points[i-1] = d
+                    # (np.dot(n,a)- np.dot(n,points[i-1]))/ np.dot(n,n) = t
+                    
+                    
+                    #Punkt auf der Geraden, welcher am nachsten am punkt a liegt.
+                    ta = (np.dot(n,a)-np.dot(n,points[i-1]))/ np.dot(n,n)
+                    #ta = (n[0]*a[0]+n[1]*a[1]- n[0]*points[i-1][0]-n[1]*points[i-1][1])/(n[0]^2 + n[1]^2)
+                    
+                    cutPoint = n * ta + points[i-1]
+                    
+                    #abstand des aktuellen punktes zur gefraesten gerade
+                    #dis = np.sqrt(a[0]*cutPoint[0]+a[1]*cutPoint[1])
+                    
+                    dis = distanc(xTemp,yTemp,points[i-1][0],points[i-1][1],points[i][0],points[i][1])
+                    #ist der punkt so nah an der gerade das er im radius des werkzeugsliegt, wird di hoehe verringert
+                    if(dis < drill[1] and dis > (-drill[1]) ):
+                        #die neue hoehe ist die alte hoehe minus die groese des Werkzeugs
+                        hFeld[xTemp][yTemp] = min([cutPoint[2],hFeld[xTemp][yTemp]])
 
 def f(x,y, feld):
     return feld[x,y]
@@ -79,16 +111,6 @@ def f(x,y, feld):
 def main():
     #Werkstueck erstellen
     feld = createBlock()
-
-
-    X = np.arange(0,block[0],1)
-    Y = np.arange(0,block[1],1)
-    X,Y = np.meshgrid(X,Y)
-    Z = f(X,Y, feld)
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    surf = ax.plot_surface(X=X,Y=Y,Z=Z, cmap=cm.Greens)
 
     #darstellen des unbehandelten Werkstuecks
 
