@@ -34,15 +34,13 @@ if(drillHeight > blockHeight):
 drill = [drillHeight,drillRad]
 #----Werkzeug fertig----
 
+p1 = [0,-6]
+p2 = [120,10]
 
+def distanc(x,y,x1,y1,x2,y2):
 
-def distanc(x,y):
-    #bestimmt den Abstan eines Punktes zur Gerade auf der Gefraest wird
-    # y = (2/15)*x -6 ist die Gerade auf der gefraest wird (siehe Dokumentation)
-    dTemp = (float(float(x)*2)/15)-6
-    # distanz = (2/15)*x -6 -y (siehe MafI2)
-    d=dTemp - y
-    # distanz zurueckgeben
+    m = (y2-y1)/(x2-x1)
+    d = m*x + (y1-m*x)-y
     return d
 
 def createBlock():
@@ -69,7 +67,7 @@ def mill(hFeld):
             #if(xTemp > 120 or yTemp > 10):
             #    continue
             #abstand des aktuellen punktes zur gefraesten gerade
-            d = distanc(xTemp,yTemp)
+            d = distanc(xTemp,yTemp,p1[0],p1[1],p2[0],p2[1])
             #ist der punkt so nah an der gerade das er im radius des werkzeugsliegt, wird di hoehe verringert
             if(d < drill[1] and d > (-drill[1]) ):
                 #die neue hoehe ist die alte hoehe minus die groese des Werkzeugs
