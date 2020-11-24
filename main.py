@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
+from matplotlib.colors import LinearSegmentedColormap
 #--------globaleVariableneinlesen--------
 bufferSize = 2
 
@@ -35,9 +36,34 @@ drill = [drillHeight,drillRad]
 #----Werkzeug fertig----
 
 
-points = np.array([[20,20, 90],[80,20,90]])
+points = np.array([[20,20,90],[80,20,90],[70,60,80],[90,40,70],[20,20,90]])
 
+def distance(p1,p2):
+    return np.linalg.norm(p2-p1)
 
+def nearestPoint(p1,p2,a):
+    p1p2 = p2-p1
+    #Line:
+    #x = (p2-p1)* t + p1
+    #Plane:
+    #0 = (p2-p1) 'dot' (x-a)
+    #(p2-p1)'dot'(a) = (p2-p1)'dot'(x)
+    #Line 'X' Plane
+    #(p2-p1)'dot'(a) = (p2-p1)'dot'((p2-p1)* t + p1)
+    #(p2-p1)'dot'(a) = (p2-p1)'dot'((p2-p1)* t) + (p2-p1)'dot'(p1)
+    #(p2-p1)'dot'(a) - (p2-p1)'dot'(p1) = (p2-p1)'dot'((p2-p1)* t)
+    #(p2-p1)'dot'(a) - (p2-p1)'dot'(p1) = (p2[0]-p1[0])^2 * t + (p2[1]-p1[1])^2 * t + (p2[2]-p1[2])^2 *t
+    #(p2-p1)'dot'(a) - (p2-p1)'dot'(p1) =((p2[0]-p1[0])^2+(p2[1]-p1[1])^2+(p2[2]-p1[2])^2) * t 
+    #t =((p2-p1)'dot'(a) - (p2-p1)'dot'(p1)) /((p2[0]-p1[0])^2+(p2[1]-p1[1])^2+(p2[2]-p1[2])^2) 
+    #           d                   f                               g
+    
+    #t =(np.dot(p2-p1,a) - np.dot(p2-p1,p1)) /((p2[0]-p1[0])^2+(p2[1]-p1[1])^2+(p2[2]-p1[2])^2)
+    d = np.dot(p1p2,a)
+    f = np.dot(p1p2,p1)
+    g = np.dot(p1p2,p1p2)
+    t = (d-f)/g
+    return ((p2-p1)* max(0,min(1,t)) + p1)
+    
 
 def distanc(x,y,x1,y1,x2,y2):
 
@@ -66,8 +92,7 @@ def mill(hFeld):
             xTemp = x + bufferSize
             yTemp = y + bufferSize
             
-            a = np.array([xTemp,yTemp,block[2]])
-            
+            a = np.array([xTemp,yTemp,hFeld[xTemp][yTemp]])
             
             #Fuer alle aus den Punkten enstehenden Geraden wird gefrast
             for i in range(len(points)) : 
@@ -91,17 +116,19 @@ def mill(hFeld):
                     
                     
                     #Punkt auf der Geraden, welcher am nachsten am punkt a liegt.
-                    ta = (np.dot(n,a)-np.dot(n,points[i-1]))/ np.dot(n,n)
+                    #ta = (np.dot(n,a)-np.dot(n,points[i-1]))/ np.dot(n,n)
                     #ta = (n[0]*a[0]+n[1]*a[1]- n[0]*points[i-1][0]-n[1]*points[i-1][1])/(n[0]^2 + n[1]^2)
                     
-                    cutPoint = n * ta + points[i-1]
+                    #cutPoint = n * ta + points[i-1]
+                    cutPoint = nearestPoint(points[i-1],points[i],a)
                     
                     #abstand des aktuellen punktes zur gefraesten gerade
-                    #dis = np.sqrt(a[0]*cutPoint[0]+a[1]*cutPoint[1])
                     
-                    dis = distanc(xTemp,yTemp,points[i-1][0],points[i-1][1],points[i][0],points[i][1])
+                    dis = distance(a[:2],cutPoint[:2])
+                    
+                    #dis = distanc(xTemp,yTemp,points[i-1][0],points[i-1][1],points[i][0],points[i][1])
                     #ist der punkt so nah an der gerade das er im radius des werkzeugsliegt, wird di hoehe verringert
-                    if(dis < drill[1] and dis > (-drill[1]) ):
+                    if(dis < drill[1]):
                         #die neue hoehe ist die alte hoehe minus die groese des Werkzeugs
                         hFeld[xTemp][yTemp] = min([cutPoint[2],hFeld[xTemp][yTemp]])
 
@@ -123,10 +150,30 @@ def main():
     X,Y = np.meshgrid(X,Y)
     Z = f(X,Y, feld)
 
+    #Transperent colors
+    # get colormap
+    ncolors = 256
+    color_array = plt.get_cmap('cool')(range(ncolors))
 
+    # change alpha values
+    color_array[:,-1] = np.linspace(0.0,1.0,ncolors)
+
+    # create a colormap object
+    cmap = LinearSegmentedColormap.from_list(name='rainbow_alpha',colors=color_array)
+
+    # register this new colormap with matplotlib
+
+    plt.register_cmap(cmap=cmap)
+    
+    
     fig = plt.figure()
     ay = fig.add_subplot(111, projection='3d')
-    surf = ay.plot_surface(X=X,Y=Y,Z=Z, cmap=cm.Greens)
+    surf = ay.plot_surface(X=X,Y=Y,Z=Z, cmap='rainbow_alpha')
+    for i in range(len(points)) :
+        if(i != 0):
+            ay.plot(np.array([points[i-1][0],points[i][0]])
+                ,np.array([points[i-1][1],points[i][1]]),
+                np.array([points[i-1][2],points[i][2]]))
 
     plt.show()
 
