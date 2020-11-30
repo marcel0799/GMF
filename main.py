@@ -36,11 +36,29 @@ drill = [drillHeight,drillRad]
 #----Werkzeug fertig----
 
 
-points = np.array([[20,20,90],[80,20,90],[70,60,80],[90,40,70],[20,20,90]])
+points = np.array([[20,20,90],[80,20,60],[80,80,40],[10,90,75]])
 
 def distance(p1,p2):
     return np.linalg.norm(p2-p1)
 
+def nearestPointNoZ(p1,p2,a):
+    #das gleiche wie nearest Point, nur in x&y Dimension
+    p1p2 = p2-p1
+    #Line:
+    #x = (p2-p1) * t + p1
+    
+    nP = nearestPoint(p1[:2],p2[:2], a[:2])
+    t = 0
+    #get Z für nearestPoint
+    if(p1p2[0] != 0):
+        t = (nP[0]-p1[0])/p1p2[0]
+    if(p1p2[1] != 0):
+        t = (nP[1]-p1[1])/p1p2[1]
+    z = p1p2[2]*max(0,min(1,t)) + p1[2]
+    nP = np.append(nP,z)
+    return nP
+    
+    
 def nearestPoint(p1,p2,a):
     p1p2 = p2-p1
     #Line:
@@ -63,13 +81,6 @@ def nearestPoint(p1,p2,a):
     g = np.dot(p1p2,p1p2)
     t = (d-f)/g
     return ((p2-p1)* max(0,min(1,t)) + p1)
-    
-
-def distanc(x,y,x1,y1,x2,y2):
-
-    m = (y2-y1)/(x2-x1)
-    d = m*x + (y1-m*x1)-y
-    return d
 
 def createBlock():
     #Hoehenfeldkreieren
@@ -120,16 +131,21 @@ def mill(hFeld):
                     #ta = (n[0]*a[0]+n[1]*a[1]- n[0]*points[i-1][0]-n[1]*points[i-1][1])/(n[0]^2 + n[1]^2)
                     
                     #cutPoint = n * ta + points[i-1]
-                    cutPoint = nearestPoint(points[i-1],points[i],a)
+                    cutPoint = nearestPointNoZ(points[i-1],points[i],a)
                     
                     #abstand des aktuellen punktes zur gefraesten gerade
                     
                     dis = distance(a[:2],cutPoint[:2])
                     
+                    if(np.array_equal(a,np.array([80,60,hFeld[80][60]]))):
+                        print(a)
+                        print(cutPoint)
+                        print(dis)
+                        
                     #dis = distanc(xTemp,yTemp,points[i-1][0],points[i-1][1],points[i][0],points[i][1])
                     #ist der punkt so nah an der gerade das er im radius des werkzeugsliegt, wird di hoehe verringert
                     if(dis < drill[1]):
-                        #die neue hoehe ist die alte hoehe minus die groese des Werkzeugs
+                        #die neue hoehe ist die Höhe auf dem Das Werkzeug bewegt wird, oder die aktuelle Höhe vom Werkstück
                         hFeld[xTemp][yTemp] = min([cutPoint[2],hFeld[xTemp][yTemp]])
 
 def f(x,y, feld):
@@ -156,7 +172,7 @@ def main():
     color_array = plt.get_cmap('cool')(range(ncolors))
 
     # change alpha values
-    color_array[:,-1] = np.linspace(0.0,1.0,ncolors)
+    color_array[:,-1] = np.linspace(0.5,1.0,ncolors)
 
     # create a colormap object
     cmap = LinearSegmentedColormap.from_list(name='rainbow_alpha',colors=color_array)
