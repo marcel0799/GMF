@@ -1,43 +1,86 @@
 
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from matplotlib.colors import LinearSegmentedColormap
+
+#-----Test einstellungen#
+testSettings = False
+if (len(sys.argv)>1):
+    testSettings = True
+
 #--------globaleVariableneinlesen--------
 
+try:
+    #----Werkstueck--------
+    blockLength, blockWidth, blockHeight = input("Werkstueck Laenge, Breite, Hoehe angeben [in mm] : ").split()
+    blockLength = int(blockLength)
+    blockWidth = int(blockWidth)
+    blockHeight = int(blockHeight)
+    
+    if(blockLength < 0 or blockWidth < 0 or blockHeight<0):
+        print("eingaben duerfen nicht negativ sein")
+        exit(0)
+    if(blockHeight>1100):
+        print("Block wuerde die Maschine beschaedigen, da diese auf Hoehe 110 schneiden soll und der Block groeser ist")
+        exit(0)
+        
+    block = [blockLength,blockWidth,blockHeight]
+    #-----Werkstueck fertig-------
+    
+    #----Werkzeug-------
+    drillHeight, drillRad = input("Werkzeug Hoehe [in mm] : ").split()
+    drillHeight = int(drillHeight)
+    drillRad = int(drillRad)
 
-#----Werkstueck--------
-blockLength = int(input("Werkstueck Laenge [in cm] : "))
-blockWidth = int(input("Werkstueck Breite [in cm] :  "))
-blockHeight = int(input("Werkstueck Hoehe [in cm] :  "))
+    if(drillHeight<=0 or drillRad<=0):
+        print("Werkzeug Mase duerfen nicht kleiner oder gleich null sein")
+        exit(0)
+    if(drillHeight > blockHeight):
+        print("Werkzeug ist zu gros, es wuerde durch die Grundplatte schneiden")
+        exit(0)
 
-if(blockLength < 0 or blockWidth < 0 or blockHeight<0):
-    print("eingaben duerfen nicht negativ sein")
+    drill = [drillHeight,drillRad]
+    #----Werkzeug fertig----
+    
+except ValueError:
+    print("Value exception")
+    exit(1)
+except:
+    print("generell Exception")
+
+
+## points = np.array([[20,20,90],[80,20,60],[80,80,40],[10,90,75]])
+
+#----- punkte einlesen------
+points = np.empty((0,3))
+try:
+    while(True):
+        pointX, pointY, pointZ = input(str(len(points)+1) + ".Punkt [x y z]: ").split()
+        pointX = int(pointX)
+        pointY = int(pointY)
+        pointZ = int(pointZ)
+        if(pointX<0 or pointY<0 or pointY<0):
+            print("Der gewaehlte Punkt darf nicht negativ sein")
+            exit(0)
+        if(pointX>blockLength or pointY>blockWidth or pointY>blockHeight):
+            print("Der gewaehlte Punkt ist groesser als das Werkstueck")
+            exit(0)
+        points = np.r_[points, [[pointX,pointY,pointZ]]]
+        print(points)
+except ValueError:
+    print("Ende der Eingabe, es wurden " + str(len(points)) + " eingegeben")
+    #ende der eingabe
+except:
+    print("es ist ein fehler aufgetreten")
     exit(0)
-if(blockHeight>110):
-    print("Block wuerde die Maschine beschaedigen, da diese auf Hoehe 110 schneiden soll und der Block groeser ist")
+    
+if(len(points) <= 0):
+    print("Sie haben keine Punkte eingegeben")
     exit(0)
 
-block = [blockLength,blockWidth,blockHeight]
-#-----block fertig-----
-
-#----Werkzeug-------
-drillHeight = float(input("Werkzeug Hoehe [in cm] :  "))
-drillRad = float(input("Werkzeug Radius [in cm] :  "))
-
-if(drillHeight<=0 or drillRad<=0):
-    print("Werkzeug Mase duerfen nicht kleiner oder gleich null sein")
-    exit(0)
-if(drillHeight > blockHeight):
-    print("Werkzeug ist zu gros, es wuerde durch die Grundplatte schneiden")
-    exit(0)
-
-drill = [drillHeight,drillRad]
-#----Werkzeug fertig----
-
-
-points = np.array([[20,20,90],[80,20,60],[80,80,40],[10,90,75]])
 
 def distance(p1,p2):
     return np.linalg.norm(p2-p1)
