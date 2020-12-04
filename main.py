@@ -1,10 +1,11 @@
+
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from matplotlib.colors import LinearSegmentedColormap
 #--------globaleVariableneinlesen--------
-bufferSize = 2
+
 
 #----Werkstueck--------
 blockLength = int(input("Werkstueck Laenge [in cm] : "))
@@ -71,8 +72,8 @@ def nearestPoint(p1,p2,a):
     #(p2-p1)'dot'(a) = (p2-p1)'dot'((p2-p1)* t) + (p2-p1)'dot'(p1)
     #(p2-p1)'dot'(a) - (p2-p1)'dot'(p1) = (p2-p1)'dot'((p2-p1)* t)
     #(p2-p1)'dot'(a) - (p2-p1)'dot'(p1) = (p2[0]-p1[0])^2 * t + (p2[1]-p1[1])^2 * t + (p2[2]-p1[2])^2 *t
-    #(p2-p1)'dot'(a) - (p2-p1)'dot'(p1) =((p2[0]-p1[0])^2+(p2[1]-p1[1])^2+(p2[2]-p1[2])^2) * t 
-    #t =((p2-p1)'dot'(a) - (p2-p1)'dot'(p1)) /((p2[0]-p1[0])^2+(p2[1]-p1[1])^2+(p2[2]-p1[2])^2) 
+    #(p2-p1)'dot'(a) - (p2-p1)'dot'(p1) =((p2[0]-p1[0])^2+(p2[1]-p1[1])^2+(p2[2]-p1[2])^2) * t
+    #t =((p2-p1)'dot'(a) - (p2-p1)'dot'(p1)) /((p2[0]-p1[0])^2+(p2[1]-p1[1])^2+(p2[2]-p1[2])^2)
     #           d                   f                               g
     
     #t =(np.dot(p2-p1,a) - np.dot(p2-p1,p1)) /((p2[0]-p1[0])^2+(p2[1]-p1[1])^2+(p2[2]-p1[2])^2)
@@ -84,13 +85,13 @@ def nearestPoint(p1,p2,a):
 
 def createBlock():
     #Hoehenfeldkreieren
-    hFeld = np.zeros([block[0]+bufferSize*2,block[1]+bufferSize*2])
+    hFeld = np.zeros([block[0],block[1]])
 
 
     #Hoehenfeldfuellen
     for x in range(block[0]):
         for y in range(block[1]):
-            hFeld[x+bufferSize][y+bufferSize]=block[2]
+            hFeld[x][y]=block[2]
 
     return hFeld
 
@@ -100,13 +101,11 @@ def mill(hFeld):
     for x in range(block[0]):
         for y in range(block[1]):
             #korriegierte x und y werte
-            xTemp = x + bufferSize
-            yTemp = y + bufferSize
             
-            a = np.array([xTemp,yTemp,hFeld[xTemp][yTemp]])
+            a = np.array([x,y,hFeld[x][y]])
             
             #Fuer alle aus den Punkten enstehenden Geraden wird gefrast
-            for i in range(len(points)) : 
+            for i in range(len(points)) :
                 if(i != 0):
                 
                     n = points[i]-points[i-1]
@@ -120,7 +119,7 @@ def mill(hFeld):
                     #gerade = n * t + points[i-1]
                     
                     #n[0]*(n[0] * t + points[i-1][0]) +
-                    #n[1]*(n[1] * t + points[i-1][1]) + 
+                    #n[1]*(n[1] * t + points[i-1][1]) +
                     #n[2]*(n[2] * t + points[i-1][2]) = d
                     #(n dot n)  * t + n dot points[i-1] = d
                     # (np.dot(n,a)- np.dot(n,points[i-1]))/ np.dot(n,n) = t
@@ -146,7 +145,7 @@ def mill(hFeld):
                     #ist der punkt so nah an der gerade das er im radius des werkzeugsliegt, wird di hoehe verringert
                     if(dis < drill[1]):
                         #die neue hoehe ist die Höhe auf dem Das Werkzeug bewegt wird, oder die aktuelle Höhe vom Werkstück
-                        hFeld[xTemp][yTemp] = min([cutPoint[2],hFeld[xTemp][yTemp]])
+                        hFeld[x][y] = min([cutPoint[2],hFeld[x][y]])
 
 def f(x,y, feld):
     return feld[x,y]
