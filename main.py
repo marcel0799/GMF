@@ -41,6 +41,9 @@ points = np.array([[20,20,90],[80,20,60],[80,80,40],[10,90,75]])
 def distance(p1,p2):
     return np.linalg.norm(p2-p1)
 
+    
+#Gibt den Punkt auf der Strecke von p1 nach p2 zurück, welcher in x,y Dimension am wenigsten Abstand zu a hat.
+#In der Ausgabe hat der Punkt jedoch eine Z-Koordinate
 def nearestPointNoZ(p1,p2,a):
     #das gleiche wie nearest Point, nur in x&y Dimension
     p1p2 = p2-p1
@@ -58,7 +61,7 @@ def nearestPointNoZ(p1,p2,a):
     nP = np.append(nP,z)
     return nP
     
-    
+# Gibt den nächsten Punkt zu a auf der Strecke P1-P2
 def nearestPoint(p1,p2,a):
     p1p2 = p2-p1
     #Line:
@@ -137,10 +140,10 @@ def mill(hFeld):
                     
                     dis = distance(a[:2],cutPoint[:2])
                     
-                    if(np.array_equal(a,np.array([80,60,hFeld[80][60]]))):
-                        print(a)
-                        print(cutPoint)
-                        print(dis)
+                    #if(np.array_equal(a,np.array([80,60,hFeld[80][60]]))):
+                     #   print(a)
+                    #    print(cutPoint)
+                    #    print(dis)
                         
                     #dis = distanc(xTemp,yTemp,points[i-1][0],points[i-1][1],points[i][0],points[i][1])
                     #ist der punkt so nah an der gerade das er im radius des werkzeugsliegt, wird di hoehe verringert
