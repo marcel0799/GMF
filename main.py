@@ -31,7 +31,7 @@ if (not testSettings):
         #-----Werkstueck fertig-------
         
         #----Werkzeug-------
-        drillHeight, drillRad = input("Werkzeug Hoehe [in mm] : ").split()
+        drillHeight, drillRad = input("Werkzeug Hoehe Radius [in mm] : ").split()
         drillHeight = int(drillHeight)
         drillRad = int(drillRad)
 
@@ -63,12 +63,12 @@ if(not testSettings):
             pointX = int(pointX)
             pointY = int(pointY)
             pointZ = int(pointZ)
-            if(pointX<0 or pointY<0 or pointY<0):
-                print("Der gewaehlte Punkt darf nicht negativ sein")
-                exit(0)
-            if(pointX>blockLength or pointY>blockWidth or pointY>blockHeight):
-                print("Der gewaehlte Punkt ist groesser als das Werkstueck")
-                exit(0)
+            #if(pointX<0 or pointY<0 or pointY<0):
+            #    print("Der gewaehlte Punkt darf nicht negativ sein")
+            #    exit(0)
+            #if(pointX>blockLength or pointY>blockWidth or pointY>blockHeight):
+            #    print("Der gewaehlte Punkt ist groesser als das Werkstueck")
+            #   exit(0)
             points = np.r_[points, [[pointX,pointY,pointZ]]]
             print(points)
     except ValueError:
@@ -220,10 +220,10 @@ def main():
     #Transperent colors
     # get colormap
     ncolors = 256
-    color_array = plt.get_cmap('cool')(range(ncolors))
+    color_array = plt.get_cmap('inferno')(range(ncolors))
 
     # change alpha values
-    color_array[:,-1] = np.linspace(0.5,1.0,ncolors)
+    color_array[:,-1] = np.linspace(0.5,1,ncolors)
 
     # create a colormap object
     cmap = LinearSegmentedColormap.from_list(name='rainbow_alpha',colors=color_array)
