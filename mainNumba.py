@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 from numba import njit
-from numba import jit
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from matplotlib.colors import LinearSegmentedColormap
@@ -165,7 +164,7 @@ def createBlock():
 
     return hFeld
 
-@jit
+
 def mill(hFeld):
     #der fraesprozess an sich
 
@@ -180,40 +179,13 @@ def mill(hFeld):
                 if(i != 0):
                 
                     n = points[i]-points[i-1]
-                    #for i in range(len(n)):
-                    #    n[i] *= 1/(np.linalg.norm(n))
-                        
-                        
-                    ##Nachster Punkt auf Gerade von beliebigem Punkt a durch Schnittpunkt mit Ebene
-                    #Ebene durch a mit normalen n ist :
-                    # n[0]*x + n[1]*x2 + n[2]*x3 = d
-                    #gerade = n * t + points[i-1]
                     
-                    #n[0]*(n[0] * t + points[i-1][0]) +
-                    #n[1]*(n[1] * t + points[i-1][1]) +
-                    #n[2]*(n[2] * t + points[i-1][2]) = d
-                    #(n dot n)  * t + n dot points[i-1] = d
-                    # (np.dot(n,a)- np.dot(n,points[i-1]))/ np.dot(n,n) = t
-                    
-                    
-                    #Punkt auf der Geraden, welcher am nachsten am punkt a liegt.
-                    #ta = (np.dot(n,a)-np.dot(n,points[i-1]))/ np.dot(n,n)
-                    #ta = (n[0]*a[0]+n[1]*a[1]- n[0]*points[i-1][0]-n[1]*points[i-1][1])/(n[0]^2 + n[1]^2)
-                    
-                    #cutPoint = n * ta + points[i-1]
                     cutPoint = nearestPointNoZ(points[i-1],points[i],a)
                     
                     #abstand des aktuellen punktes zur gefraesten gerade
                     
                     dis = distance(a[:2],cutPoint[:2])
                     
-                    #if(np.array_equal(a,np.array([80,60,hFeld[80][60]]))):
-                     #   print(a)
-                    #    print(cutPoint)
-                    #    print(dis)
-                        
-                    #dis = distanc(xTemp,yTemp,points[i-1][0],points[i-1][1],points[i][0],points[i][1])
-                    #ist der punkt so nah an der gerade das er im radius des werkzeugsliegt, wird di hoehe verringert
                     if(dis < drill[1]):
                         #die neue hoehe ist die Höhe auf dem Das Werkzeug bewegt wird, oder die aktuelle Höhe vom Werkstück
                         hFeld[x][y] = min([cutPoint[2],hFeld[x][y]])
