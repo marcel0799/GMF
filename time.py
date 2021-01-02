@@ -40,6 +40,9 @@ def main():
         if(i==0):
             continue
         normVec = calcNormVec(points[i-1],points[i])
+        normVec[0] = np.abs(normVec[0])
+        normVec[1] = np.abs(normVec[1])
+        normVec[2] = np.abs(normVec[2])
         length = calcVecLen(points[i-1],points[i])
         
         for y in range(int((length+1)/2)):
