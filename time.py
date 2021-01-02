@@ -3,7 +3,7 @@ import numpy as np
 
 block = [100,100,100]
 drill = [5,10]
-points = np.array([[0,0,0],[5,10,0], [20,15,10], [30,25,20]])
+points = np.array([[0,0,0],[5,10,0], [20,15,10], [30,25,20], [100,100,100]])
 maxSpeed = 300.0 # [mm/s]
 maxAccelerationX = 8.0 # [mm/s^2]
 maxAccelerationY = 8.0 # [mm/s^2]
@@ -37,6 +37,7 @@ def main():
     time = 0.0
     
     for i in range(len(points)):
+        oneTime = 0.0
         if(i==0):
             continue
         normVec = calcNormVec(points[i-1],points[i])
@@ -78,13 +79,14 @@ def main():
 
             print("gewaehlte Gesch: " + str(realSpeed))
 
-            time = time + (1/realSpeed)
+            oneTime = oneTime + (1/realSpeed)
 
             print("-------------------------------------")
-        time = time*2
-        print("die benötigte Zeit für diese Gerade = " + str(time) + " sekunden, die Gerade war " + str(length) + "mm lang" )
+        oneTime = oneTime*2
+        time = time + oneTime
+        print("die benötigte Zeit für diese Gerade = " + str(oneTime) + " sekunden, die Gerade war " + str(length) + "mm lang" )
 
-    print("Testmain")
+    print("Insgesamt dauert das Fraessen: " + str(time) + " sekunden")
 
 if __name__ == "__main__":
     main()
