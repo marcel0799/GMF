@@ -4,10 +4,10 @@ import numpy as np
 block = [100,100,100]
 drill = [5,10]
 points = np.array([[0,0,0],[5,10,0], [20,15,10], [30,25,20], [100,100,100]])
-maxSpeed = 300.0 # [mm/s]
-maxAccelerationX = 8.0 # [mm/s^2]
-maxAccelerationY = 8.0 # [mm/s^2]
-maxAccelerationZ = 5.0 # [mm/s^2]
+maxSpeed = 50.0 # [mm/s]
+maxAccelerationX = 8000.0 # [mm/s^2]
+maxAccelerationY = 8000.0 # [mm/s^2]
+maxAccelerationZ = 5000.0 # [mm/s^2]
 
 def calcNormVec(point1,point2):
     vec = np.zeros(3)
