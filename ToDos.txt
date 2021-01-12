@@ -1,0 +1,50 @@
+
+Code:
+
+1. und 2. Aufgabe Funktionieren:
+	- Einlesen der Daten
+		15 Zeilen Code
+		Einlesen csv.
+		Punkte erstellen aus der csv
+	- zwischen einlesen und erstellen der Punkte intelligent runden. 
+	- (evnt. Bufferer erstellen für Matplotlib)
+	- 
+
+3. Aufgabe:
+	- Übergänge zwischen den Geraden und Beschleunigungen
+	- 
+
+
+Schriftliche Ausarbeitung:
+
+	- Einteilung: 
+		1. Aufgabe (Werkzeug und Werkstück) : Imen
+		2. Aufgabe (Fräsprozess) : Imen
+		3. Aufgabe (Geschwindigkeitsberechnung) : Marcel
+		4. Aufgabe (Kräfteberechnung) : Sönke 
+
+	- Inhaltsverzeichnis:
+		- Einleitung
+		- Inhaltsverzeichnis
+		- 1. Aufgabe (Werkzeug und Werkstück) : Imen
+			Warum CSG für das Werkzeug?
+			Warum Höhenfeld für das Werkstück?
+			Vorstellung der anderen Darstellungen Werkzeug & Werkstück
+		- 2. Aufgabe (Fräsprozess) : Imen
+			Unser erster Ansatz -> Punkte, Geraden und einmaliges Fräsen mit Lotpunkt
+			Dann zweiter (Iterativer) Ansatz -> Normalenvektor mit Zeitschritten
+			Warum der Wechsel, Unterschiede, Vorteile ? 
+			Beschleunigung des Codes
+			Matplotlib und OpenGL
+		- 3. Aufgabe (Geschwindigkeitsberechnung) : Marcel
+			Theorie Geschwindigkeit und Beschleunigung
+			Zeitschritt Iterativer Ansatz
+			Berechnung der Formel 
+			Implimentierung im Code
+			Auswertung
+		- 4. Aufgabe (Kräfteberechnung) : Sönke 
+			Vorstellung der Aufgabe und des Ziels
+			Grundlagen bzw. die Theorie dahinter
+			Welche Berechnungen müssen gemacht werden (oder so)
+			Wie hätte man das bei uns implimentieren können
+		- Fazit
