@@ -18,7 +18,7 @@ Code:
 Schriftliche Ausarbeitung:
 
 	- Einteilung: 
-		1. Aufgabe (Werkzeug und Werkstück) : Imen
+		1. Aufgabe (Werkzeug und Werkstück) : Imen, Sönke, Marcel
 		2. Aufgabe (Fräsprozess) : Imen
 		3. Aufgabe (Geschwindigkeitsberechnung) : Marcel
 		4. Aufgabe (Kräfteberechnung) : Sönke 

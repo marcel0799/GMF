@@ -1,5 +1,6 @@
 
 import sys
+import csv
 import time
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,89 +8,37 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from matplotlib.colors import LinearSegmentedColormap
 
-#-----Test einstellungen#
-testSettings = False
-if (len(sys.argv)>1):
-    testSettings = True
 
 #--------globaleVariableneinlesen--------
-if (not testSettings):
-    try:
-        #----Werkstueck--------
-        blockLength, blockWidth, blockHeight = input("Werkstueck Laenge, Breite, Hoehe angeben [in mm] : ").split()
-        blockLength = int(blockLength)
-        blockWidth = int(blockWidth)
-        blockHeight = int(blockHeight)
-        
-        if(blockLength < 0 or blockWidth < 0 or blockHeight<0):
-            print("eingaben duerfen nicht negativ sein")
-            exit(0)
-        if(blockHeight>1100):
-            print("Block wuerde die Maschine beschaedigen, da diese auf Hoehe 110 schneiden soll und der Block groeser ist")
-            exit(0)
-            
-        block = [blockLength,blockWidth,blockHeight]
-        #-----Werkstueck fertig-------
-        
-        #----Werkzeug-------
-        drillHeight, drillRad = input("Werkzeug Hoehe Radius [in mm] : ").split()
-        drillHeight = int(drillHeight)
-        drillRad = int(drillRad)
 
-        if(drillHeight<=0 or drillRad<=0):
-            print("Werkzeug Mase duerfen nicht kleiner oder gleich null sein")
-            exit(0)
-        if(drillHeight > blockHeight):
-            print("Werkzeug ist zu gros, es wuerde durch die Grundplatte schneiden")
-            exit(0)
+#----Werkstueck--------
+blockLength = 1000 #(mm/10)
+blockWidth = 1500 #(mm/10)
+blockHeight = 250 #(mm/10)
+block = [blockLength,blockWidth,blockHeight]
+#-----Werkstueck fertig-------
 
-        drill = [drillHeight,drillRad]
-        #----Werkzeug fertig----
-        
-    except ValueError:
-        print("Value exception")
-        exit(1)
-    except:
-        print("generell Exception")
-else:
-    #block = [100,100,100]
-    block = [1000,1000,1000]
-    #block = [10000,10000,1000]
-    drill = [50,100]
+#----Werkzeug-------
+drillHeight = 200 #(mm/10)
+drillRad = 60 #(mm/10)
+drill = [drillHeight,drillRad]
+#----Werkzeug fertig----
 
 #-----Punkte Einlesen------
-if(not testSettings):
-    points = np.empty((0,3))
-    try:
-        while(True):
-            pointX, pointY, pointZ = input(str(len(points)+1) + ".Punkt [x y z]: ").split()
-            pointX = int(pointX)
-            pointY = int(pointY)
-            pointZ = int(pointZ)
-            #if(pointX<0 or pointY<0 or pointY<0):
-            #    print("Der gewaehlte Punkt darf nicht negativ sein")
-            #    exit(0)
-            #if(pointX>blockLength or pointY>blockWidth or pointY>blockHeight):
-            #    print("Der gewaehlte Punkt ist groesser als das Werkstueck")
-            #   exit(0)
-            points = np.r_[points, [[pointX,pointY,pointZ]]]
-            print(points)
-    except ValueError:
-        print("Ende der Eingabe, es wurden " + str(len(points)) + " eingegeben")
-        #ende der eingabe
-    except:
-        print("es ist ein fehler aufgetreten")
-        exit(0)
-        
-    if(len(points) <= 0):
-        print("Sie haben keine Punkte eingegeben")
-        exit(0)
+points = np.empty((0,3))
 
-else:
-    #points = np.array([[20,20,90],[80,20,90],[80,80,40],[50,50,50]])
-    points = np.array([[150,150,950],[800,800,550], [800,200,300]])
-    #points = np.array([[10,10,950],[9000,9000,550]])
-    
+with open('punkte_klein.csv', newline='') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+    for row in spamreader:
+        pointX = int(float(row[0])*10)
+        pointY = int(float(row[1])*10)
+        pointZ = int(float(row[2])*10)
+        points = np.r_[points, [[pointX,pointY,pointZ]]]
+        #points = np.append(points,array)
+
+print(len(points))
+for i in range(0,len(points)-1):
+    print(points[i])  
 #------Ende der Punkt Eingabe-----------
 
 
