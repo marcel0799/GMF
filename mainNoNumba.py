@@ -14,7 +14,7 @@ from matplotlib.colors import LinearSegmentedColormap
 #----Werkstueck--------
 blockLength = 1000 #(mm/10)
 blockWidth = 1500 #(mm/10)
-blockHeight = 250 #(mm/10)
+blockHeight = 2500 #(mm/10)
 block = [blockLength,blockWidth,blockHeight]
 #-----Werkstueck fertig-------
 
@@ -30,14 +30,14 @@ points = np.empty((0,3))
 with open('punkte_klein.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
     for row in spamreader:
-        pointX = int(float(row[0])*10)
-        pointY = int(float(row[1])*10)
-        pointZ = int(float(row[2])*10)
+        pointX = int(float(row[0])*10)+500
+        pointY = int(float(row[1])*10)+750
+        pointZ = int(float(row[2])*10)+250
         points = np.r_[points, [[pointX,pointY,pointZ]]]
         #points = np.append(points,array)
 
 print(len(points))
-for i in range(0,len(points)-1):
+for i in range(0,len(points)):
     print(points[i])  
 #------Ende der Punkt Eingabe-----------
 
