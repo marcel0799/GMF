@@ -1,13 +1,12 @@
 import sys
 import csv
 import numpy as np
+import matplotlib.pyplot as plt
 
 maxSpeed = 3000.0 # [mm/s]
 maxAccelerationX = 8000.0 # [mm/s^2]
 maxAccelerationY = 8000.0 # [mm/s^2]
 maxAccelerationZ = 5000.0 # [mm/s^2]
-allSpeeds = np.array([0])
-print(allSpeeds)
 #--------globaleVariableneinlesen--------
 
 #----Werkstueck--------
@@ -25,6 +24,7 @@ drill = [drillHeight,drillRad]
 
 #-----Punkte Einlesen------
 points = np.empty((0,4))
+allSpeeds = [0.0]
 
 with open('punkte_klein.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
@@ -110,8 +110,7 @@ def main():
             lastSpeedZ = normVec[2] / (1/realSpeed)
 
             print("gewaehlte Gesch: " + str(realSpeed))
-            newAllSpeeds = np.append(allSpeeds,[int(realSpeed)])
-            allSpeeds = newAllSpeeds
+            allSpeeds.append(realSpeed)
             oneTime = oneTime + (1/realSpeed)
 
             print("-------------------------------------")
@@ -120,6 +119,8 @@ def main():
         print("die benötigte Zeit für diese Gerade = " + str(oneTime) + " sekunden, die Gerade war " + str(length) + "mm lang" )
 
     print("Insgesamt dauert das Fraessen: " + str(time) + " sekunden")
+    plt.plot(allSpeeds)
+    plt.show()
 
 if __name__ == "__main__":
     main()
