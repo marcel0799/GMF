@@ -62,13 +62,13 @@ def calcVecLen(point1,point2):
     return length
 
 def main():
-    lastSpeedX = 0.0
-    lastSpeedY = 0.0
-    lastSpeedZ = 0.0
     time = 0.0
     
     for i in range(len(points)):
         oneTime = 0.0
+        lastSpeedX = 0.0
+        lastSpeedY = 0.0
+        lastSpeedZ = 0.0
         maxSpeed = points[i,3]
         if(i==0):
             continue
