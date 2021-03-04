@@ -24,7 +24,6 @@ drill = [drillHeight,drillRad]
 
 #-----Punkte Einlesen------
 points = np.empty((0,4))
-allSpeeds = [0.0]
 
 with open('punkte_klein.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
@@ -63,8 +62,10 @@ def calcVecLen(point1,point2):
 
 def main():
     time = 0.0
-    
+    allSpeeds = [0.0]
+
     for i in range(len(points)):
+        speedList = [0.0] 
         oneTime = 0.0
         lastSpeedX = 0.0
         lastSpeedY = 0.0
@@ -110,17 +111,25 @@ def main():
             lastSpeedZ = normVec[2] / (1/realSpeed)
 
             print("gewaehlte Gesch: " + str(realSpeed))
-            allSpeeds.append(realSpeed)
+            speedList.append(float(realSpeed))
             oneTime = oneTime + (1/realSpeed)
 
             print("-------------------------------------")
         oneTime = oneTime*2
         time = time + oneTime
+
+        #----------------List bearbeiten-------------
+        laenge = len(speedList)-1
+        for h in range(laenge):
+            speedList.append(speedList[laenge-h])
+        allSpeeds += speedList
+        #-----------------List------------------
         print("die benötigte Zeit für diese Gerade = " + str(oneTime) + " sekunden, die Gerade war " + str(length) + "mm lang" )
 
     print("Insgesamt dauert das Fraessen: " + str(time) + " sekunden")
+    allSpeeds.append(0.0)
     plt.plot(allSpeeds)
-    plt.show()
+    plt.savefig("image1.png")
 
 if __name__ == "__main__":
     main()
