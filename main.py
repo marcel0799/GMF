@@ -28,14 +28,13 @@ drill = [drillHeight,drillRad]
 #-----Punkte Einlesen------
 points = np.empty((0,3))
 
-with open('punkte_klein.csv', newline='') as csvfile:
+with open('punkte.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
     for row in spamreader:
         pointX = int(float(row[0])*10)+500
         pointY = int(float(row[1])*10)+750
         pointZ = int(float(row[2])*10)+250
         points = np.r_[points, [[pointX,pointY,pointZ]]]
-        #points = np.append(points,array)
 
 print(len(points))
 for i in range(0,len(points)):

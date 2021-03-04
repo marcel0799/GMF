@@ -1,13 +1,44 @@
 import sys
+import csv
 import numpy as np
 
-block = [100,100,100]
-drill = [5,10]
-points = np.array([[0,0,0],[5,10,0], [20,15,10], [30,25,20]])
-maxSpeed = 300.0 # [mm/s]
+maxSpeed = 3000.0 # [mm/s]
 maxAccelerationX = 8000.0 # [mm/s^2]
 maxAccelerationY = 8000.0 # [mm/s^2]
 maxAccelerationZ = 5000.0 # [mm/s^2]
+allSpeeds = np.array([0])
+print(allSpeeds)
+#--------globaleVariableneinlesen--------
+
+#----Werkstueck--------
+blockLength = 100 #(mm)
+blockWidth = 150 #(mm)
+blockHeight = 250 #(mm)
+block = [blockLength,blockWidth,blockHeight]
+#-----Werkstueck fertig-------
+
+#----Werkzeug-------
+drillHeight = 20 #(mm)
+drillRad = 6 #(mm)
+drill = [drillHeight,drillRad]
+#----Werkzeug fertig----
+
+#-----Punkte Einlesen------
+points = np.empty((0,4))
+
+with open('punkte_klein.csv', newline='') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+    for row in spamreader:
+        pointX = int(float(row[0]))
+        pointY = int(float(row[1]))
+        pointZ = int(float(row[2]))
+        mSpeed = int(float(row[3]))
+        points = np.r_[points, [[pointX,pointY,pointZ,mSpeed]]]
+
+print(len(points))
+for i in range(0,len(points)):
+    print(points[i])  
+#------Ende der Punkt Eingabe-----------
 
 def calcNormVec(point1,point2):
     vec = np.zeros(3)
@@ -38,6 +69,7 @@ def main():
     
     for i in range(len(points)):
         oneTime = 0.0
+        maxSpeed = points[i,3]
         if(i==0):
             continue
         normVec = calcNormVec(points[i-1],points[i])
@@ -78,7 +110,8 @@ def main():
             lastSpeedZ = normVec[2] / (1/realSpeed)
 
             print("gewaehlte Gesch: " + str(realSpeed))
-
+            newAllSpeeds = np.append(allSpeeds,[int(realSpeed)])
+            allSpeeds = newAllSpeeds
             oneTime = oneTime + (1/realSpeed)
 
             print("-------------------------------------")

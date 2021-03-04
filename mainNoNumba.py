@@ -34,7 +34,6 @@ with open('punkte_klein.csv', newline='') as csvfile:
         pointY = int(float(row[1])*10)+750
         pointZ = int(float(row[2])*10)+250
         points = np.r_[points, [[pointX,pointY,pointZ]]]
-        #points = np.append(points,array)
 
 print(len(points))
 for i in range(0,len(points)):
