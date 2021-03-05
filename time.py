@@ -3,7 +3,7 @@ import csv
 import numpy as np
 import matplotlib.pyplot as plt
 
-maxSpeed = 3000.0 # [mm/s]
+maxSpeed = float(3000.0/60) # [mm/s]
 maxAccelerationX = 8000.0 # [mm/s^2]
 maxAccelerationY = 8000.0 # [mm/s^2]
 maxAccelerationZ = 5000.0 # [mm/s^2]
@@ -25,13 +25,13 @@ drill = [drillHeight,drillRad]
 #-----Punkte Einlesen------
 points = np.empty((0,4))
 
-with open('punkte_klein.csv', newline='') as csvfile:
+with open('punkte_klein_time.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
     for row in spamreader:
         pointX = int(float(row[0]))
         pointY = int(float(row[1]))
         pointZ = int(float(row[2]))
-        mSpeed = int(float(row[3]))
+        mSpeed = int(float(row[3])/60)
         points = np.r_[points, [[pointX,pointY,pointZ,mSpeed]]]
 
 print(len(points))
@@ -62,10 +62,10 @@ def calcVecLen(point1,point2):
 
 def main():
     time = 0.0
-    allSpeeds = [0.0]
+    #allSpeeds = [0.0]
 
     for i in range(len(points)):
-        speedList = [0.0] 
+        #speedList = [0.0] 
         oneTime = 0.0
         lastSpeedX = 0.0
         lastSpeedY = 0.0
@@ -111,7 +111,7 @@ def main():
             lastSpeedZ = normVec[2] / (1/realSpeed)
 
             print("gewaehlte Gesch: " + str(realSpeed))
-            speedList.append(float(realSpeed))
+            #speedList.append(float(realSpeed))
             oneTime = oneTime + (1/realSpeed)
 
             print("-------------------------------------")
@@ -119,17 +119,17 @@ def main():
         time = time + oneTime
 
         #----------------List bearbeiten-------------
-        laenge = len(speedList)-1
-        for h in range(laenge):
-            speedList.append(speedList[laenge-h])
-        allSpeeds += speedList
+        #laenge = len(speedList)-1
+        #for h in range(laenge):
+        #    speedList.append(speedList[laenge-h])
+        #allSpeeds += speedList
         #-----------------List------------------
         print("die benötigte Zeit für diese Gerade = " + str(oneTime) + " sekunden, die Gerade war " + str(length) + "mm lang" )
 
     print("Insgesamt dauert das Fraessen: " + str(time) + " sekunden")
-    allSpeeds.append(0.0)
-    plt.plot(allSpeeds)
-    plt.savefig("image1.png")
+    #allSpeeds.append(0.0)
+    #plt.plot(allSpeeds)
+    #plt.savefig("image1.png")
 
 if __name__ == "__main__":
     main()

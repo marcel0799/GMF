@@ -15,7 +15,7 @@ from matplotlib.colors import LinearSegmentedColormap
 #----Werkstueck--------
 blockLength = 1000 #(mm/10)
 blockWidth = 1500 #(mm/10)
-blockHeight = 2500 #(mm/10)
+blockHeight = 250 #(mm/10)
 block = [blockLength,blockWidth,blockHeight]
 #-----Werkstueck fertig-------
 
